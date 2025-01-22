@@ -11,6 +11,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.persistence.EntityNotFoundException;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -34,19 +35,11 @@ public class AuthController {
             @ApiResponse(responseCode = "500", description = "Internal server error")
     })
     public ResponseEntity<AuthResponse> login(@RequestBody LoginRequest request) {
-        try {
-            AppClient authenticatedAppClient = appClientService.getUser(request);
+        AppClient authenticatedAppClient = appClientService.getUser(request);
 
-            String token = jwtUtil.generateToken(authenticatedAppClient.getUsername());
+        String token = jwtUtil.generateToken(authenticatedAppClient.getUsername());
 
-            return ResponseEntity.ok(new AuthResponse("Bearer " + token));
-        } catch (EntityNotFoundException e) {
-            AuthResponse badRequest = new AuthResponse(e.getMessage());
-            return ResponseEntity.badRequest().body(badRequest);
-        } catch (Exception e) {
-            AuthResponse internalServerError = new AuthResponse("An error occurred");
-            return ResponseEntity.internalServerError().body(internalServerError);
-        }
+        return ResponseEntity.ok(new AuthResponse("Bearer " + token));
     }
 
     @PostMapping("/register")
@@ -57,22 +50,16 @@ public class AuthController {
             @ApiResponse(responseCode = "400", description = "Failed to register user"),
             @ApiResponse(responseCode = "500", description = "Internal server error")
     })
-    public ResponseEntity<String> register(@RequestBody RegisterRequest request) {
-        try {
-            if (request.getUsername() == null || request.getPassword() == null) {
-                return ResponseEntity.badRequest().body("Username and password are required");
-            }
-            AppClient appClient = new AppClient();
-            appClient.setUsername(request.getUsername());
-            appClient.setPassword(passwordEncoder.encode(request.getPassword()));
-
-            appClientService.createUser(appClient);
-
-            return ResponseEntity.ok("User registered successfully");
-        } catch (IllegalArgumentException e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
-        } catch (Exception e) {
-            return ResponseEntity.internalServerError().body("An error occurred");
+    public ResponseEntity<String> register(@RequestBody @NotNull RegisterRequest request) {
+        if (request.getUsername() == null || request.getPassword() == null) {
+            return ResponseEntity.badRequest().body("Username and password are required");
         }
+        AppClient appClient = new AppClient();
+        appClient.setUsername(request.getUsername());
+        appClient.setPassword(passwordEncoder.encode(request.getPassword()));
+
+        appClientService.createUser(appClient);
+
+        return ResponseEntity.ok("User registered successfully");
     }
 }

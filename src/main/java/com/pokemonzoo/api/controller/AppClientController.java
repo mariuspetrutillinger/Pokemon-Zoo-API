@@ -44,12 +44,8 @@ public class AppClientController {
         }
         String username = jwtUtil.getUsernameFromToken(token);
 
-        try {
-            AppClientDetailsDto user = appClientService.getUserDetails(username);
-            return ResponseEntity.ok(user);
-        } catch (Exception e) {
-            return ResponseEntity.badRequest().build();
-        }
+        AppClientDetailsDto user = appClientService.getUserDetails(username);
+        return ResponseEntity.ok(user);
     }
 
     @Operation(summary = "Delete user",
@@ -61,14 +57,8 @@ public class AppClientController {
     @DeleteMapping()
     public ResponseEntity<String> deleteUser(
             @RequestBody UUID clientId) {
-
-        try {
-            appClientService.deleteUser(clientId);
-            return ResponseEntity.ok("User deleted successfully");
-        } catch (Exception e) {
-            String message = e.getMessage();
-            return ResponseEntity.badRequest().body(message);
-        }
+        appClientService.deleteUser(clientId);
+        return ResponseEntity.ok("User deleted successfully");
     }
 
     @Operation(summary = "Add favorite Pokemons",
@@ -84,12 +74,8 @@ public class AppClientController {
         UUID clientId = appClientPokemonRequest.getClientId();
         Set<UUID> pokemonIds = appClientPokemonRequest.getPokemonIds();
 
-        try {
-            clientFavoritePokemonService.addFavorites(clientId, pokemonIds);
-            return ResponseEntity.ok("Favorite Pokemons added successfully");
-        } catch (Exception e) {
-            return ResponseEntity.badRequest().build();
-        }
+        clientFavoritePokemonService.addFavorites(clientId, pokemonIds);
+        return ResponseEntity.ok("Favorite Pokemons added successfully");
     }
 
     @Operation(summary = "Remove favorite Pokemons",

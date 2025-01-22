@@ -28,11 +28,7 @@ public class PokemonController {
     })
     @GetMapping("/all")
     public ResponseEntity<List<PokemonDetailsDto>> getAllPokemon(@RequestParam Integer page) {
-        try {
-            return ResponseEntity.ok(pokemonService.getAllPokemons(page));
-        } catch (Exception e) {
-            return ResponseEntity.internalServerError().build();
-        }
+        return ResponseEntity.ok(pokemonService.getAllPokemons(page));
     }
 
     @Operation(summary = "Search Pokemon",
@@ -45,13 +41,7 @@ public class PokemonController {
     @PostMapping("/search")
     public ResponseEntity<List<PokemonDetailsDto>> searchPokemon(
             @RequestBody SearchPokemonDTO searchPokemonDTO) {
-        try {
-            return ResponseEntity.ok(pokemonService.searchPokemons(searchPokemonDTO));
-        } catch (IllegalArgumentException e) {
-            return ResponseEntity.badRequest().build();
-        } catch (Exception e) {
-            return ResponseEntity.internalServerError().build();
-        }
+        return ResponseEntity.ok(pokemonService.searchPokemons(searchPokemonDTO));
     }
 
     @Operation(summary = "Count Pokemon",
@@ -64,13 +54,7 @@ public class PokemonController {
     @PostMapping("/count")
     public ResponseEntity<Integer> countPokemon(
             @RequestBody SearchPokemonDTO searchPokemonDTO) {
-        try {
-            return ResponseEntity.ok(pokemonService.countPokemons(searchPokemonDTO));
-        } catch (IllegalArgumentException e) {
-            return ResponseEntity.badRequest().build();
-        } catch (Exception e) {
-            return ResponseEntity.internalServerError().build();
-        }
+        return ResponseEntity.ok(pokemonService.countPokemons(searchPokemonDTO));
     }
 
     @Operation(summary = "Add Pokemon",
@@ -82,17 +66,11 @@ public class PokemonController {
     })
     @PostMapping("/add")
     public ResponseEntity<String> addPokemon(@RequestBody PokemonDetailsDto pokemon) {
-        try {
-            if (pokemon == null) {
-                return ResponseEntity.badRequest().body("Pokemon data cannot be null");
-            }
-            pokemonService.savePokemon(pokemon);
-            return ResponseEntity.ok("Pokemon added successfully");
-        } catch (IllegalArgumentException e) {
-            return ResponseEntity.badRequest().build();
-        } catch (Exception e) {
-            return ResponseEntity.internalServerError().build();
+        if (pokemon == null) {
+            return ResponseEntity.badRequest().body("Pokemon data cannot be null");
         }
+        pokemonService.savePokemon(pokemon);
+        return ResponseEntity.ok("Pokemon added successfully");
     }
 
 }

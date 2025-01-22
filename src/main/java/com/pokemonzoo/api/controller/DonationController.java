@@ -29,11 +29,7 @@ public class DonationController {
     })
     @GetMapping("/all")
     public ResponseEntity<List<DonationDetailsDto>> getAllDonations() {
-        try {
-            return ResponseEntity.ok(donationService.getDonations());
-        } catch (Exception e) {
-            return ResponseEntity.internalServerError().build();
-        }
+        return ResponseEntity.ok(donationService.getDonations());
     }
 
     @Operation(summary = "Make a donation",
@@ -45,13 +41,7 @@ public class DonationController {
     })
     @PostMapping("/add")
     public ResponseEntity<String> makeDonation(@RequestBody DonationDetailsDto donationDetailsDto) {
-        try {
-            donationHabitatService.makeDonation(donationDetailsDto);
-            return ResponseEntity.ok("Donation made successfully");
-        } catch (IllegalArgumentException e) {
-            return ResponseEntity.badRequest().build();
-        } catch (Exception e) {
-            return ResponseEntity.internalServerError().build();
-        }
+        donationHabitatService.makeDonation(donationDetailsDto);
+        return ResponseEntity.ok("Donation made successfully");
     }
 }

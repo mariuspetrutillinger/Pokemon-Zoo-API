@@ -28,11 +28,7 @@ public class HabitatController {
     })
     @GetMapping("/all")
     public ResponseEntity<List<HabitatDetailsDto>> getAllHabitats() {
-        try {
-            return ResponseEntity.ok(habitatService.getAllHabitats());
-        } catch (Exception e) {
-            return ResponseEntity.internalServerError().build();
-        }
+        return ResponseEntity.ok(habitatService.getAllHabitats());
     }
 
     @Operation(summary = "Add habitat",
@@ -44,14 +40,8 @@ public class HabitatController {
     })
     @PostMapping("/add")
     public ResponseEntity<String> addHabitat(@RequestBody HabitatDetailsDto habitat) {
-        try {
-            habitatService.createHabitat(habitat);
-            return ResponseEntity.ok("Habitat added successfully");
-        } catch (IllegalArgumentException e) {
-            return ResponseEntity.badRequest().build();
-        } catch (Exception e) {
-            return ResponseEntity.internalServerError().build();
-        }
+        habitatService.createHabitat(habitat);
+        return ResponseEntity.ok("Habitat added successfully");
     }
 
     @Operation(summary = "Get habitat details",
@@ -63,11 +53,7 @@ public class HabitatController {
     })
     @PostMapping("/details")
     public ResponseEntity<HabitatDetailsDto> getHabitatDetails(@RequestBody String habitatName) {
-        try {
-            return ResponseEntity.ok(habitatService.getHabitatDetails(habitatName));
-        } catch (IllegalArgumentException e) {
-            return ResponseEntity.badRequest().build();
-        }
+        return ResponseEntity.ok(habitatService.getHabitatDetails(habitatName));
     }
 
     @Operation(summary = "Add Pokemon to habitat",
@@ -79,16 +65,10 @@ public class HabitatController {
     })
     @PostMapping("/add-pokemon")
     public ResponseEntity<String> addPokemonToHabitat(@RequestBody HabitatPokemonRequest habitatPokemonRequest) {
-        try {
-            if (habitatPokemonRequest == null) {
-                return ResponseEntity.badRequest().body("Request cannot be null");
-            }
-            habitatService.addPokemonToHabitat(habitatPokemonRequest);
-            return ResponseEntity.ok("Pokemon added to habitat successfully");
-        } catch (IllegalArgumentException e) {
-            return ResponseEntity.badRequest().build();
-        } catch (Exception e) {
-            return ResponseEntity.internalServerError().build();
+        if (habitatPokemonRequest == null) {
+            return ResponseEntity.badRequest().body("Request cannot be null");
         }
+        habitatService.addPokemonToHabitat(habitatPokemonRequest);
+        return ResponseEntity.ok("Pokemon added to habitat successfully");
     }
 }
