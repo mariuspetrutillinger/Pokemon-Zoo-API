@@ -91,11 +91,7 @@ public class AppClientController {
         UUID clientId = appClientPokemonRequest.getClientId();
         Set<UUID> pokemonIds = appClientPokemonRequest.getPokemonIds();
 
-        try {
-            pokemonIds.forEach(pokemonId -> clientFavoritePokemonService.removeFavorite(clientId, pokemonId));
-            return ResponseEntity.ok("Favorite Pokemons removed successfully");
-        } catch (Exception e) {
-            return ResponseEntity.badRequest().build();
-        }
+        pokemonIds.forEach(pokemonId -> clientFavoritePokemonService.removeFavorite(clientId, pokemonId));
+        return ResponseEntity.ok("Favorite Pokemons removed successfully");
     }
 }
